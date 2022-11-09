@@ -1,4 +1,5 @@
 import json
+import random
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -36,15 +37,16 @@ def split_repositories(repositories_list):
 
 #The model of Linear Regression _ fit the model with 2/3 of the array and then predict the result for the rest of it
 def linear_regression(stars, forks):
-		
-	stars_train = np.delete(stars, np.arange(len(stars), 3)).reshape((-1, 1))
-	stars_test = stars[::3].reshape((-1, 1))
-	forks_train = np.delete(forks, np.arange(len(forks), 3))
-	forks_test = forks[::3]
+
+	rand_indexes = random.sample(range(len(stars)), int(len(stars)/3))
+	
+	stars_train = np.delete(stars, rand_index).reshape((-1, 1))
+	forks_train = np.delete(forks, rand_index)
+	stars_test = np.array([stars[rand] for rand_index in rand_indexes]).reshape((-1, 1))
+	forks_test = np.array([forks[rand] for rand_index in rand_indexes])
 	
 	model = LinearRegression().fit(stars_train, forks_train)
 	forks_predict = model.predict(stars_train)
-	#forks_pred = model.intercept_ + model.coef_ * stars_train
 	
 	regression_error = model.score(stars_test, forks_test)
 	print(f"Score error: {regression_error}")
