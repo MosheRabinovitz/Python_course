@@ -27,23 +27,21 @@ def collect_repositories_pages(num_pages):
 
 #get the spesific wanted data from an array of repositories
 def split_repositories(repositories_list):
-	stars = []
-	forks = []
+	relervant_data = []
 	for repositorie in repositories_list:
-		stars.append(repositorie.pop('stargazers_count'))
-		forks.append(repositorie.pop('forks_count'))
-	return np.array(stars), np.array(forks)
+		relervant_data.append([repositorie.pop('stargazers_count'),repositorie.pop('forks_count')])
+	return np.array(relervant_data)
 
 
 #The model of Linear Regression _ fit the model with 2/3 of the array and then predict the result for the rest of it
-def linear_regression(stars, forks):
+def linear_regression(relervant_data):
 
-	rand_indexes = random.sample(range(len(stars)), int(len(stars)/3))
-	
-	stars_train = np.array([stars[index] for index in range(len(stars)) if index not in rand_indexes]).reshape((-1, 1))
-	forks_train = np.array([forks[index] for index in range(len(forks)) if index not in rand_indexes])
-	stars_test = np.array([stars[rand_index] for rand_index in rand_indexes]).reshape((-1, 1))
-	forks_test = np.array([forks[rand_index] for rand_index in rand_indexes])
+	random.shuffle(relervant_data)
+	middle = int(len(relervant_data)*2/3)
+	stars_train = relervant_data[:middle, 0].reshape((-1, 1))
+	forks_train = relervant_data[:middle, 1]
+	stars_test = relervant_data[middle:, 0].reshape((-1, 1))
+	forks_test = relervant_data[middle:, 1]
 	
 	model = LinearRegression().fit(stars_train, forks_train)
 	forks_predict = model.predict(stars_train)
@@ -67,8 +65,8 @@ def display(stars_train, forks_train, stars_test, forks_test, forks_predict):
 def main():
 	num_of_pages = int(input("Enter number for repositories pages: "))
 	list_of_repositories_pages = collect_repositories_pages(num_of_pages)
-	stars_list, forks_list = split_repositories(list_of_repositories_pages)
-	stars_train, forks_train, stars_test, forks_test, forks_predict = linear_regression(stars_list, forks_list)
+	relevant_data = split_repositories(list_of_repositories_pages)
+	stars_train, forks_train, stars_test, forks_test, forks_predict = linear_regression(relevant_data)
 	display(stars_train, forks_train, stars_test, forks_test, forks_predict)
 	
 if __name__ == "__main__":
