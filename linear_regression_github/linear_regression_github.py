@@ -29,7 +29,7 @@ def collect_repositories_pages(num_pages):
 def split_repositories(repositories_list):
 	relervant_data = []
 	for repositorie in repositories_list:
-		relervant_data.append([repositorie.pop('stargazers_count'),repositorie.pop('forks_count')])
+		relervant_data.append([repositorie['stargazers_count'],repositorie['forks_count']])
 	return np.array(relervant_data)
 
 
