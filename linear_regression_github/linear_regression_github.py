@@ -44,7 +44,7 @@ def linear_regression(relervant_data):
 	forks_test = relervant_data[middle:, 1]
 	
 	model = LinearRegression().fit(stars_train, forks_train)
-	forks_predict = model.predict(stars_train)
+	forks_predict = model.predict(stars_test)
 	
 	regression_error = model.score(stars_test, forks_test)
 	print(f"Score error: {regression_error}")
@@ -56,7 +56,7 @@ def linear_regression(relervant_data):
 def display(stars_train, forks_train, stars_test, forks_test, forks_predict):
 	plt.scatter(stars_train, forks_train, color="blue")
 	plt.scatter(stars_test, forks_test, color="red")
-	plt.plot(stars_train, forks_predict, color="black", linewidth=2)
+	plt.plot(stars_test, forks_predict, color="black", linewidth=2)
 	plt.xticks()
 	plt.yticks()
 	plt.show()
