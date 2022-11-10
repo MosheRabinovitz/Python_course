@@ -12,10 +12,10 @@ def linear_regression(X_array, Y_array):
 	teta_2 = 10
 	gama = 0.0001
 	epsilon = 1
-	i = 1
-	while i < 101 and epsilon > gama: 
+	i = 0
+	while i < 1000 and epsilon > gama: 
 		y_predict = (teta_2 * X_array) + teta_1
-		partial_derivative_1, partial_derivative_2 = gradiend_descent(X_array, Y_array, y_predict)
+		partial_derivative_1, partial_derivative_2 = gradiend_descent	(X_array, Y_array, y_predict)
 		
 		teta_1 = teta_1 - gama * partial_derivative_1
 		teta_2 = teta_2 - gama * partial_derivative_2
@@ -37,8 +37,8 @@ def display(X_array,Y_array, x_points, y_points):
 	plt.scatter(X_array, Y_array, color="red")
 	plt.show()
 	
-def function(num, teta_1, teta_2):
-	result = teta_1 + teta_2 * num
+def function(x_points, teta_1, teta_2):
+	result = teta_1 + teta_2 * x_points
 	return result
 	
 	
@@ -49,11 +49,8 @@ def main():
 	teta_1, teta_2 = linear_regression(X_array, Y_array)
 	print("teta 1:", teta_1, "teta 2:", teta_2)
 	
-	num_0 = 0
-	num_1 = 10
-	x_0 = [num_0 ,function(num_0, teta_1, teta_2)]
-	x_1 = [num_1, function(num_1, teta_1, teta_2)]
-	x_points, y_points = [x_0[0],x_1[0]], [x_0[1],x_1[1]]
+	x_points = np.linspace(-1, 11, 50)
+	y_points = function(x_points, teta_1, teta_2)
 	display(X_array, Y_array, x_points ,y_points)
 	
 	
