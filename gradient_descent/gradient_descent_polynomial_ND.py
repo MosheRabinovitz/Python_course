@@ -1,23 +1,23 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-ORDER = int(input("Enter number for ORDER of the function: "))
+ORDER = int(input("Enter number for ORDER of the function: ")) +1
 
 
 #Calculating the vector of the gradients
-def gradient_descent(X_array, Y_array, y_predicted, ORDER):
+def gradient_descent(X_array, Y_array, y_predicted, weights):
 	partial_derivative = np.zeros(ORDER)
 	for i in range(ORDER):
-		partial_derivative[i] = sum((X_array **i) * (y_predicted - Y_array))
+		partial_derivative[i] = sum(weights * (X_array **i) * (y_predicted - Y_array)) # * 2/len(X_array)
 	return partial_derivative
 
 
 #Algorithm for Gradient Descent
-def polynomisl_regression(X_array, Y_array, ORDER, iterations=2000, learning_rate=0.0000000001):
+def polynomisl_regression(X_array, Y_array, weights, iterations=2000):
 
 	#Initializing teta, learning rate ,epsilon and iterations
 	teta = np.array([1] * ORDER)
-	learning_rate = learning_rate
+	learning_rate = 10**(-2*ORDER)
 	epsilon = 1
 	iterations = iterations
 	
@@ -26,25 +26,45 @@ def polynomisl_regression(X_array, Y_array, ORDER, iterations=2000, learning_rat
 		y_predicted = np.zeros(len(X_array))
 		for j in range(ORDER):
 			y_predicted += teta[j] * X_array **j
-		partial_derivative = gradient_descent(X_array, Y_array, y_predicted, ORDER)
-		teta = teta - learning_rate * partial_derivative * 2/len(X_array)
+		partial_derivative = gradient_descent(X_array, Y_array, y_predicted, weights)
+		teta = teta - learning_rate * partial_derivative
 		
-		error_cost = cost(Y_array, y_predicted)
+		error_cost = cost(Y_array, y_predicted, weights)
 		epsilon = max(abs(partial_derivative))
-		
+		coefficient = coefficient_of_determination(Y_array, y_predicted)
 		# Printing the parameters for each iteration
 		print(f'Cost {i}: {error_cost}')
 		print(f'Epsilon {i}: {epsilon}')
+		print(f'coefficient_of_determination: {coefficient}')
 		
 		i += 1
-		
+	
 	return teta
 
 
+# Weight_function for the center
+def weights(X_array):
+	median = np.median(X_array)
+	max_distance = max(abs(median - max(X_array)), abs(median - min(X_array)))
+	weights = -(X_array - median)**2 + max_distance **2 + 0.01
+	sum_array = sum(weights)
+	weights /= sum_array
+	return weights
+
+
 # Calculating the loss or cost
-def cost(Y_array, y_predicted):
-	cost = sum((y_predicted - Y_array)**2)
+def cost(Y_array, y_predicted, weights):
+	cost = sum(weights * (y_predicted - Y_array)**2)
 	return cost
+
+
+#Calculate the Coefficient of Determination
+def coefficient_of_determination(Y_array, y_predicted):
+	mean = np.mean(Y_array)
+	ss_res = sum((Y_array - y_predicted)**2)
+	ss__tot = sum((Y_array - mean)**2)
+	coefficient_of_determination = 1 - ss_res/ss__tot
+	return coefficient_of_determination
 
 
 # Plotting the original points and the regression line
@@ -71,31 +91,32 @@ def points_test():
 	Y_array = []
 
 	for i in range(int(NUM_SIZE/2)):
-		X_array.append(2*i)
+		X_array.append(i*2)
 		X_array.append(-i*2)
-		Y_array.append(function_test(-i*2))
 		Y_array.append(function_test(i*2))
+		Y_array.append(function_test(-i*2))
 	return np.array(X_array), np.array(Y_array)
 
 
 # Calculate function in power of ORDER to points_test
 def function_test(num):
-	return num **ORDER
+	return num **(ORDER-1)
 	
 	
 def main():
-	#data = np.load('XYdata.npz')
-	#X_array, Y_array = data['array_1'], data['array_2']
+	data = np.load('XYdata.npz')
+	X_array, Y_array = data['array_1'], data['array_2']
 	
-	X_array, Y_array = points_test()
+	#X_array, Y_array = points_test()
 	
-
-	teta = polynomisl_regression(X_array, Y_array, ORDER+1, 1000)
+	weights_coordinates = weights(X_array)
+	iterations = int(input("Enter number for iterations: "))
+	teta = polynomisl_regression(X_array, Y_array, weights_coordinates, iterations)
 	for i in range(len(teta)):
-		print(f"teta {i}:", teta[i], end=",")
+		print(f"teta {i}: {teta[i]}", end=", ")
 	
 	#crate new points to get the regression line
-	x_array = np.linspace(-50, 50, 100)
+	x_array = np.linspace(-1, 11, 100)
 	y_array = function(x_array, teta)
 	
 	display(X_array, Y_array, x_array, y_array)
