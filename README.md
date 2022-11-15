@@ -35,3 +35,33 @@ Output:
 1. The program will extract the requested number of jobs from the API into an array.
 2. The program will initiate an array of pairs for the stars and downloads  data.
 3. The program will then run a 'linear regression' model on these values to check the error of the straight line that provides the coefficient of determination in relation to these points, then display it on a graph.
+
+# 5 Gradient descent
+This program finds and displays the equation of the line closest to all points in a given dataset.
+
+Extensions:
+a. Another program finds the polynomial equation (of  second degree) closest to the points.
+b. Another program finds the polynomial equation (of  N degree) closest to the points.
+c. Another program finds the exponent equation closest to the points.
+
+Input:
+The program uses the data-set from the file 'XYdata.npz' (You can use the point_test function instead)
+In addition, it requests as input from the user: the requested degree and the number of iterations he wishes to run (in extensions).
+
+Output:
+The program starts the calculation from an arbitrary point, and for each point performs the calculation of the gradient (the vector of the partial derivatives) in order to learn in which direction to 'lower' the values of the equation of the line (when, of course, the result of the gradient is multiplied by the learning rate to minimize possible errors).
+This process is repeated by the program as long as the progress continues, up to the limit of iterations defined by the user.
+
+At the end of the run, the program returns the equation of the line (or the polynomial) obtained, indicates the degree of accuracy of the line in relation to the points (coefficient of determination) and displays in a graph the equation of the straight line and the true position of the points (in the training and prediction model, the points of the test array will be displayed in different colors).
+
+In order to increase the accuracy of the model, we defined a 'weight' for each point, so that the points close to the center (on the x-axis) receive a higher score than the points that are far from it, and when calculating the gradient we multiplied the calculation of the partial derivative for each x value by the 'weight' ' corresponding to the same value, and thus we reduced the influence of the points far from the center on the resulting straight line equation.
+
+# 6 k-nearest neighbors algorithm
+This program uses the k-NN algorithm to find the number k that will provide the group of neighbors that will allow to predict with the highest degree of accuracy according to the characteristics of each flower (from the given data-set) the species to which it belongs.
+
+Input:
+The program uses a dataset from the file 'iris.data' (you can practice on the simpler data-set from the test.data file), and receives as input the highest k number that will serve as the limit of the range up to which it will check the k values.
+
+Output:
+The program performs 100 iterations so that in each iteration the program randomly selects 80% of the data, and performs k tests on it to find the best k-value in the range between 1 and the k-value chosen for the data.
+Finally, the program selects the k-value that provided the highest accuracy out of the 100 iterations. And checks the result of another test with the k-value returned on an array that contains 20% of the data.
