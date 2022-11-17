@@ -1,6 +1,8 @@
 import random
 import numpy as np
+import matplotlib.pyplot as plt
 
+ITER_NUM = 100
 
 #Finds k neighbors from a specific point
 def find_k_nearest_neighbors(correct_flower, flowers_data, k, i):
@@ -31,38 +33,34 @@ def vote(flowers_type, min_k):
 	names = flowers_type[min_k]
 	flower_predict = most_frequent(names)
 	return flower_predict[0] if len(flower_predict) == 1 else flower_predict[0]
-	
+
 
 #Find the best k neighbors for predicting the flower type
-def training(flowers_data, flowers_type, range_k):
+def training(flowers_data_train, flowers_type_train, flowers_data_test, flowers_type_test, range_k):
 	best_k = 0
 	best_cuont = 0
+	best = np.zeros(range_k-1)
 
 	for k in range(1, range_k):
-		count = count_precision(flowers_data, flowers_type, k, flowers_data, flowers_type)
+		count = count_precision(flowers_data_train, flowers_type_train, flowers_data_test, flowers_type_test, k)
 		if best_cuont < count:
 			best_cuont = count
 			best_k = k
-
-	precision = round(100 * best_cuont / len(flowers_data))
-	return best_k, precision, best_cuont
-
-
-#Predicting the flower type of data test according to flowers data
-def predict(flowers_data_test, flowers_type_test, flowers_data, flowers_type, num_k_neighbors):
-	count = count_precision(flowers_data, flowers_type, num_k_neighbors, flowers_data_test, flowers_type_test)
-	error = round(100 * count / len(flowers_data_test))
-	return count, error
+		best[k-1] = count
+	precision = round(100 * best_cuont / len(flowers_data_test))
+	maximum = max(best)
+	max_k = [i+1 for i in range(range_k-1) if best[i] == maximum]
+	return best_k, best, max_k, precision
 
 
 #Calculate the number of the successful predictions
-def count_precision(flowers_data, flowers_type, num_k_neighbors ,pretict_flowers_data, test_type_flowers):
+def count_precision(flowers_data_train, flowers_type_train ,flowers_data_test, flowers_type_test, num_k_neighbors):
 	count = 0
 	i = 0
-	for flower in pretict_flowers_data:
-		neighbors = find_k_nearest_neighbors(flower, flowers_data, num_k_neighbors, i)
-		predict_flower = vote(flowers_type, neighbors)
-		if predict_flower == test_type_flowers[i]:
+	for flower in flowers_data_test:
+		neighbors = find_k_nearest_neighbors(flower, flowers_data_train, num_k_neighbors, i)
+		predict_flower = vote(flowers_type_train, neighbors)
+		if predict_flower == flowers_type_test[i]:
 			count +=1
 		i += 1
 	return count
@@ -100,15 +98,26 @@ def change_to_name(most_frequent):
 	else:
 		return 'Iris-virginica'
 
+def display(the_best_1_d, to_display, range_k):
+	plt.style.use('seaborn')
+	plt.title('The brst k graph')
+	plt.legend(['k'], loc='lower left')
+	plt.plot(range(range_k), to_display, color="red", linewidth=2)
+	plt.hist(the_best_1_d)
+	plt.xticks()
+	plt.yticks()
+	
+	plt.show()
 
 def main():
 	flowers_data, flowers_type = extract_file("iris.data")
 	#flowers_data, flowers_type = extract_file("test.data")
 	range_k = int(input('Enter number for range k: '))
 	best = []
+	the_best = []
 	
-	#Run 100 times to find the best k of any shuffle
-	for i in range(100):
+	#Run ITER_NUM times to find the best k of any shuffle
+	for i in range(ITER_NUM):
 		print('\nThe itarition now is:', i+1)
 
 		shuffler = np.random.permutation(len(flowers_type))
@@ -119,19 +128,35 @@ def main():
 		flowers_data_train, flowers_type_train = flowers_data_shuffled[:middle], flowers_type_shuffled[:middle]
 		flowers_data_test, flowers_type_test = flowers_data_shuffled[middle:], flowers_type_shuffled[middle:]
 		
-		best_k, precision, best_cuont = training(flowers_data_train, flowers_type_train, range_k)
+		best_k, best_itarations, max_k, precision = training(flowers_data_train, flowers_type_train, flowers_data_test, flowers_type_test, range_k)
 		best.append(best_k)
+		the_best.append(max_k)
 		print('The best k is:', best_k)
-		print(f'Accuracy of this itarations is: {best_cuont} out of {len(flowers_data)}')
+		print(f'Accuracy of this itarations is: {best_itarations} out of {len(flowers_data_test)}')
 		print(f'precision: {precision} %')
+		print(f'{max_k=}')
 		
 	best_k_itarations = most_frequent(best)
-	count, precision = predict(flowers_data_test, flowers_type_test, flowers_data_train, flowers_type_train, best_k_itarations[0])
 	
+	the_best_1_d = [j for i in the_best for j in i]
+	
+		
+	best_k_itarations_2 = most_frequent(the_best_1_d)
+	
+	#print(the_best_1_d)
 	print('\nFinal result:')
-	print("\nThe best k itarations is:", best_k_itarations)
-	print(f'\nAccuracy of {count} out of {len(flowers_data_test)}')
-	print(f'precision: {precision} %')
+	#print(f'{best=}')
+	print(f'{best_k_itarations_2=}')
+	#print("\nThe best k itarations is:", best_k_itarations)
+	
+	to_display = [0] * (range_k)
+	for i in the_best_1_d:
+		to_display[i] +=1
+		
+	precision = round(100 * to_display[best_k_itarations_2[0]] / ITER_NUM) #len(flowers_data_test))
+	print(f'The {best_k_itarations_2[0]} is the best k for {precision}% out of the {ITER_NUM} itarations')
+	display(the_best_1_d, to_display, range_k)
+	
 
 
 if __name__ == "__main__":
