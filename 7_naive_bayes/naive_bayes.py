@@ -7,7 +7,7 @@ def extract_file_and_order_data(file_name):
 	# Extract data
 	with open(file_name) as f:
 		csvreader = csv.reader(f)
-		data = list(csvreader)#[row for row in csvreader]
+		data = list(csvreader)
 	
 	#Organizes to an array of pairs
 	data_pairs = [[data[i][1:], data[i][0]] for i in range(len(data))]
