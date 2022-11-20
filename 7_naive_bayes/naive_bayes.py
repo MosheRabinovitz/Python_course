@@ -1,5 +1,6 @@
 import csv, math, random
 
+# The number of the attribute columns
 DIMENTION = 22
 
 # Extract data from the file and organizes them to an array of pairs  = [is_poisonous, attribute]
@@ -59,12 +60,14 @@ def count_sum_poisonous(train_data):
 
 # Calculate the probability for each attribute to be poisonous/not poisonous
 def attributes_probabilities(dictionary, sum_poisonous, sum_non_poisonous, k=0.5):
-
+	x = 0
 	probabilities = [0] * (DIMENTION)
 	for i in range(DIMENTION):
 		probabilities[i] = []
 		for j, (poisonous, non_poisonous) in dictionary[i].items():
 			probabilities[i].append((j, (poisonous + k) / (sum_poisonous + 2 * k), (non_poisonous + k) / (sum_non_poisonous + 2 * k)))
+			x+= (poisonous + k) / (sum_poisonous + 2 * k)
+	print(x)
 	
 	return probabilities
 	
