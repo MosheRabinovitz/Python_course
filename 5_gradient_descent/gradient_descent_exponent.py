@@ -13,15 +13,16 @@ def gradient_descent(X_array, Y_array, y_predicted):
 
 # Reduce the exponent to polynomial function
 def exponent_regrision(X_array, Y_array):
-	min_y = min(Y_array)	
-	Y_array += abs(min_y) +2 if min_y < 0 else 0
+	
+	min_y = min(Y_array)
+	y_array = Y_array + abs(min_y) +2 if min_y < 0 else 0
 
-	#log_y_array = np.log(Y_array)
+	log_y_array = np.log(y_array)
 	
 	iterations = int(input("Enter number for iterations: "))
-	teta = polynomial_regression(X_array, Y_array, iterations)
+	teta = polynomial_regression(X_array, log_y_array, iterations)
 	
-	return teta, min_y
+	return teta
 
 
 #Algorithm for Gradient Descent
@@ -29,7 +30,7 @@ def polynomial_regression(X_array, Y_array, iterations=2000):
 
 	#Initializing teta, learning rate ,epsilon and iterations
 	teta = np.array([1] * 2)
-	learning_rate = 10**-5
+	learning_rate = 10**-14
 	epsilon = 1
 	iterations = iterations
 	
@@ -56,7 +57,7 @@ def polynomial_regression(X_array, Y_array, iterations=2000):
 
 # Calculating the loss or cost
 def cost(Y_array, y_predicted):
-	cost = sum(2/len(Y_array) * (y_predicted - Y_array)**2)
+	cost = 2/len(Y_array) * sum((y_predicted - Y_array)**2)
 	return cost
 
 
@@ -79,26 +80,27 @@ def display(X_array, Y_array, x_array, y_array):
 
 
 # Calculate and convert to exponent function the values of the y_coordinates according to teta_vactor we received in the polynomisl_regression
-def exp_function(array, teta, x):
+def exp_function(array, teta):
 	result = np.zeros(len(array))
 	for j in range(len(array)):
 		for i in range(len(teta)):
-			result[j] += np.exp(teta[i] * array[j]**i)
-		result[j] -= x
+			result[j] += np.exp(teta[i] * array[j]**i) 
 	return result
+
 
 
 def main():
 	data = np.load('XYdata.npz')
 	X_array, Y_array = data['array_1'], data['array_2']
-	teta, x = exponent_regrision(X_array, Y_array)
+	
+	teta = exponent_regrision(X_array, Y_array)
 	
 	for i in range(len(teta)):
 		print(f"teta {i}: {teta[i]}", end=", ")
 	
 	#crate new points to get the regression line
 	x_array = np.linspace(0, 10, 100)
-	y_array = exp_function(x_array, teta, x)
+	y_array = exp_function(x_array, teta)
 	
 	display(X_array, Y_array, x_array, y_array)
 	
