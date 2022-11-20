@@ -65,3 +65,19 @@ The program uses a dataset from the file 'iris.data' (you can practice on the si
 Output:
 The program performs 100 iterations so that in each iteration the program randomly selects 80% of the data, and performs k tests on it to find the best k-value in the range between 1 and the k-value chosen for the data.
 Finally, the program selects the k-value that provided the highest accuracy out of the 100 iterations. And checks the result of another test with the k-value returned on an array that contains 20% of the data.
+
+# 7 Naive Bayes classification
+This program implements the Naive Bayes probabilistic model, the purpose of which is to characterize data according to their properties. In this program, we will first classify the data on a training set that will be randomly selected from the given data-set, and then we will choose the accuracy of the model in characterizing the data on the test set.
+
+input:
+The program uses a dataset from the file 'agaricus-lepiota.data', which holds data about different features of mushrooms (where for each feature there are several different options), as well as their  classification as 'poisonous' and 'non-poisonous'.
+
+output:
+a. The program splits the data into pairs of data - features alongside classification as poison/not poisonous 
+
+b. Splits the data randomly: 80% into an array to train the model, and 20% for testing the model.
+
+c. Training: the program extracts from the training set all the unique options that exist for each of the twenty-two attributes of the mushrooms, and initializes a nested dictionary for each attribute, within which is a nested dictionary for each option.
+In the next step, the program summarizes for each option the number of times it appeared for a poisonous and non-poisonous mushroom, and with this data performs the probability calculation according to Bayes' law for each and every possibility.
+
+Examination : After the model is trained, the program sends the test array for testing, performs a classification for each element in it, and counts and displays how many times the model gave a higher than fifty percent chance that the mushroom is indeed poisonous or less and the mushroom not poisonous as well as the percentage of success
