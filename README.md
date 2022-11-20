@@ -72,6 +72,8 @@ This program implements the Naive Bayes probabilistic model, the purpose of whic
 input:
 The program uses a dataset from the file 'agaricus-lepiota.data', which holds data about different features of mushrooms (where for each feature there are several different options), as well as their  classification as 'poisonous' and 'non-poisonous'.
 
+Expansion: another program underwent substantial adjustments and changes to perform a classification into different varieties of irises according to a dataset on the sizes of the leaves. In this way, we illustrated that the model can be adapted to characterize different types of information through simple changes
+
 output:
 a. The program splits the data into pairs of data - features alongside classification as poison/not poisonous 
 
