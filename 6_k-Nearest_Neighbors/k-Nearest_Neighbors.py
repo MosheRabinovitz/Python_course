@@ -143,18 +143,20 @@ def main():
 		
 	best_k_itarations_2 = most_frequent(the_best_1_d)
 	
-	#print(the_best_1_d)
+	count = count_precision(flowers_data_train, flowers_type_train, flowers_data_test, flowers_type_test, best_k_itarations_2[0])
+	precision = round(100 * count/ len(flowers_data_test))
+
 	print('\nFinal result:')
-	#print(f'{best=}')
 	print(f'{best_k_itarations_2=}')
-	#print("\nThe best k itarations is:", best_k_itarations)
+	print(f'Accuracy of test is: {count} out of {len(flowers_data_test)}')
+	print(f'{precision = }%')
 	
 	to_display = [0] * (range_k)
 	for i in the_best_1_d:
 		to_display[i] +=1
 		
-	precision = round(100 * to_display[best_k_itarations_2[0]] / ITER_NUM) #len(flowers_data_test))
-	print(f'The {best_k_itarations_2[0]} is the best k for {precision}% out of the {ITER_NUM} itarations')
+	k_precision = round(100 * to_display[best_k_itarations_2[0]] / ITER_NUM) #len(flowers_data_test))
+	print(f'The {best_k_itarations_2[0]} is the best k for {k_precision}% out of the {ITER_NUM} itarations')
 	display(the_best_1_d, to_display, range_k)
 	
 
