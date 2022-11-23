@@ -83,3 +83,19 @@ c. Training: the program extracts from the training set all the unique options t
 In the next step, the program summarizes for each option the number of times it appeared for a poisonous and non-poisonous mushroom, and with this data performs the probability calculation according to Bayes' law for each and every possibility.
 
 Examination : After the model is trained, the program sends the test array for testing, performs a classification for each element in it, and counts and displays how many times the model gave a higher than fifty percent chance that the mushroom is indeed poisonous or less and the mushroom not poisonous as well as the percentage of success
+
+# 8. k_means_clustering algorithm
+
+This program divides a collection of data points into k clusters (groups) iteratively by calculating the proximity of their numerical data to the centers of mass of the clusters. The program repeats this process for a range of k values and returns the k value that best fits the distribution of the data set.
+
+input:
+The program uses a data-set from the file 'iris.data' (you can practice on the simpler data-set from the test.data file) to classify three varieties of the iris flower according to four coordinates of the length and width of the leaves, and requests a user's input for the maximum number k that he wishes to test.
+
+output:
+The program divides the data into k clusters (groups) iteratively according to the calculation of the proximity of their numerical data that are used as location coordinates to the centers of mass of the clusters.
+In the first step the k 'centers of mass' are chosen randomly, and then in each iteration the center of mass is calculated in relation to all the points associated with that cluster.
+The program repeats this process 10 times for each k between 1 and the selected maximum k, with each step keeping (for each k)the k points that provided the result with the minimum total variance.
+
+At the end of the process the program returns the k that provided the minimum total variance, which will usually be the highest k tested, and also displays a graph of the total variance for each k, thus allowing us to find the k value of the 'elbow point' for which a relatively good overall variance was obtained despite the division into a relatively low number of clusters.
+
+After closing the graph, the program will offer the user to enter the k he chose, and will calculate the 'confusion matrix' for the calculation where we can see for each of the k clusters how many of the data points did in truth belong to each of the groups.
