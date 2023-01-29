@@ -5,8 +5,6 @@
 
 # 2. Introduction_to_machine_learning
 	Algorithms in machine learning  
-# 3. SpaceInvaders
-	Final project in the course
 
-# 4. Small_projects
+# 3. Small_projects
 	Small tasks in the course
